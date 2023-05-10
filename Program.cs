@@ -1,13 +1,18 @@
 using JWTAuthentication.API.Database.Context;
+using JWTAuthentication.API.Interfaces;
 using JWTAuthentication.API.Models;
+using JWTAuthentication.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-// fix this
-IConfiguration _configuration;
+// get config
+var config = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", optional: false)
+        .Build();
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,12 +37,14 @@ builder.Services.AddAuthentication(options =>
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidAudience = _configuration["JWT:ValidAudience"],
-            ValidIssuer = _configuration["JWT:ValidIssuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]))
+            ValidAudience = (string)config.GetValue(typeof(string), "JWT:ValidAudience"),
+            ValidIssuer = (string)config.GetValue(typeof(string), "JWT:Issuer"),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes((string)config.GetValue(typeof(string), "JWT:Secret")))
         };
     });
 
+builder.Services.AddTransient<IAuthenticateService, AuthenticateService>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddControllers();
 
