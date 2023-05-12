@@ -2,6 +2,7 @@
 using JWTAuthentication.API.Models.UserModels;
 using JWTAuthentication.API.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Net;
 
 namespace JWTAuthentication.API.Services
 {
@@ -21,7 +22,7 @@ namespace JWTAuthentication.API.Services
             if (user == null)
                 return new CustomResponseModel<ViewUserModel>()
                 {
-                    StatusCode = 404,
+                    StatusCode = HttpStatusCode.NotFound,
                     Message = "Not found!"
                 };
 
@@ -33,7 +34,7 @@ namespace JWTAuthentication.API.Services
 
             return new CustomResponseModel<ViewUserModel>()
             {
-                StatusCode = 200,
+                StatusCode = HttpStatusCode.OK,
                 Result = viewUserModel
             };
         }
@@ -45,7 +46,7 @@ namespace JWTAuthentication.API.Services
             if (user == null)
                 return new CustomResponseModel<ViewUserModel>()
                 {
-                    StatusCode = 404,
+                    StatusCode = HttpStatusCode.NotFound,
                     Message = "Not found!"
                 };
 
@@ -57,7 +58,7 @@ namespace JWTAuthentication.API.Services
 
             return new CustomResponseModel<ViewUserModel>()
             {
-                StatusCode = 200,
+                StatusCode = HttpStatusCode.OK,
                 Result = viewUserModel
             };
         }

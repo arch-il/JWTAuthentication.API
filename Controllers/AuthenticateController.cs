@@ -15,16 +15,13 @@ namespace JWTAuthentication.API.Controllers
             _service = service;
         }
 
-        [HttpPost("[action]")]
-        [Route("LogIn")]
-        public async Task<CustomResponseModel<LogInResponceData>> LogIn([FromBody] LogInModel logInModel) => await _service.LogIn(logInModel);
+        [HttpPost("LogIn")]
+        public async Task<ICustomResponseModel<LogInResponceData>> LogIn([FromBody] LogInModel logInModel) => await _service.LogIn(logInModel);
 
-        [HttpPost("[action]")]
-        [Route("Register")]
-        public async Task<CustomResponseModel<bool>> Register([FromBody] RegisterModel registerModel) => await _service.Register(registerModel);
+        [HttpPost("Register")]
+        public async Task<ICustomResponseModel<bool>> Register([FromBody] RegisterModel registerModel) => await _service.Register(registerModel);
 
-        [HttpPost("[action]")]
-        [Route("RegisterAdmin")]
-        public async Task<CustomResponseModel<bool>> RegisterAdmin([FromBody] RegisterModel registerModel) => await _service.RegisterAdmin(registerModel);
+        [HttpPost("RegisterAdmin")]
+        public async Task<ICustomResponseModel<bool>> RegisterAdmin([FromBody] RegisterModel registerModel) => await _service.RegisterAdmin(registerModel);
     }
 }

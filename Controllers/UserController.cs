@@ -19,10 +19,10 @@ namespace JWTAuthentication.API.Controllers
 
         [Authorize]
         [HttpGet("[action]")]
-        public async Task<CustomResponseModel<ViewUserModel>> GetUserById(int id) => await _service.GetUserById(id);
+        public async Task<ICustomResponseModel<ViewUserModel>> GetUserById(int id) => await _service.GetUserById(id);
 
         [Authorize]
         [HttpGet("[action]")]
-        public async Task<CustomResponseModel<ViewUserModel>> GetUserByName(string name) => await _service.GetUserByName(name);
+        public async Task<ICustomResponseModel<ViewUserModel>> GetUserByName(string name) => await _service.GetUserByName(name);
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 
@@ -51,7 +52,7 @@ namespace JWTAuthentication.API.Services
 
                 return new CustomResponseModel<LogInResponceData>()
                 {
-                    StatusCode = 200,
+                    StatusCode = HttpStatusCode.OK,
                     Result = new LogInResponceData()
                     {
                         token = new JwtSecurityTokenHandler().WriteToken(token),
@@ -62,7 +63,7 @@ namespace JWTAuthentication.API.Services
 
             return new CustomResponseModel<LogInResponceData>()
             {
-                StatusCode = 401,
+                StatusCode = HttpStatusCode.Unauthorized,
                 Message = "Unauthorized"
             };
         }
@@ -74,7 +75,7 @@ namespace JWTAuthentication.API.Services
             if (userExists != null)
                 return new CustomResponseModel<bool>()
                 {
-                    StatusCode = 403,
+                    StatusCode = HttpStatusCode.Forbidden,
                     Message = "User already exists!",
                     Result = false
                 };
@@ -91,14 +92,14 @@ namespace JWTAuthentication.API.Services
             if (!result.Succeeded)
                 return new CustomResponseModel<bool>()
                 {
-                    StatusCode = 424,
+                    StatusCode = HttpStatusCode.FailedDependency,
                     Message = "Failed to create user!",
                     Result = false
                 };
 
             return new CustomResponseModel<bool>()
             {
-                StatusCode = 200,
+                StatusCode = HttpStatusCode.OK,
                 Result = true
             };
         }
@@ -110,7 +111,7 @@ namespace JWTAuthentication.API.Services
             if (userExists != null)
                 return new CustomResponseModel<bool>()
                 {
-                    StatusCode = 403,
+                    StatusCode = HttpStatusCode.Forbidden,
                     Message = "User already exists!",
                     Result = false
                 };
@@ -127,7 +128,7 @@ namespace JWTAuthentication.API.Services
             if (!result.Succeeded)
                 return new CustomResponseModel<bool>()
                 {
-                    StatusCode = 424,
+                    StatusCode = HttpStatusCode.FailedDependency,
                     Message = "Failed to create user!",
                     Result = false
                 };
@@ -143,7 +144,7 @@ namespace JWTAuthentication.API.Services
 
             return new CustomResponseModel<bool>()
             {
-                StatusCode = 200,
+                StatusCode = HttpStatusCode.OK,
                 Result = true
             };
         }

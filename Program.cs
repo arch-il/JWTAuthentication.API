@@ -8,16 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-// get config
-var config = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json", optional: false)
-        .Build();
-
-
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddDbContext<JWTAuthenticationContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("ECommerceDB")));
+builder.Services.AddDbContext<JWTAuthenticationContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("JWTAuthenticationDB")));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<JWTAuthenticationContext>()
@@ -37,9 +30,9 @@ builder.Services.AddAuthentication(options =>
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidAudience = (string)config.GetValue(typeof(string), "JWT:ValidAudience"),
-            ValidIssuer = (string)config.GetValue(typeof(string), "JWT:Issuer"),
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes((string)config.GetValue(typeof(string), "JWT:Secret")))
+            ValidAudience = builder.Configuration.GetValue<string>("JWT:ValidAudience"),
+            ValidIssuer = builder.Configuration.GetValue<string>("JWT:Issuer"),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("JWT:Secret")))
         };
     });
 
@@ -59,6 +52,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "JWTAuthentication.API v1"));
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -68,3 +64,18 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+/*
+ *  Swashbuckle.AspNetCore.SwaggerGen.SwaggerGeneratorException: Ambiguous HTTP method for action - 
+ *  JWTAuthentication.API.Controllers.AuthenticateController.LogIn (JWTAuthentication.API). Actions 
+ *  require an explicit HttpMethod binding for Swagger/OpenAPI 3.0
+         at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GenerateOperations(IEnumerable`1 
+apiDescriptions, SchemaRepository schemaRepository)
+         at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GeneratePaths(IEnumerable`1 apiDescriptions, 
+SchemaRepository schemaRepository)
+         at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GetSwagger(String documentName, String host, 
+String basePath)
+         at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider 
+swaggerProvider)
+         at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+*/
