@@ -19,6 +19,11 @@ namespace JWTAuthentication.API.Controllers
 
         [Authorize]
         [HttpGet("[action]")]
+        public async Task<ICustomResponseModel<IEnumerable<ViewUserModel>>> GetAllUsers() => await _service.GetAllUsers(); // implement this function in service and interface
+
+
+        [Authorize]
+        [HttpGet("[action]")]
         public async Task<ICustomResponseModel<ViewUserModel>> GetUserById(int id) => await _service.GetUserById(id);
 
         [Authorize]
