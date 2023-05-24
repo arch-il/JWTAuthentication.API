@@ -38,6 +38,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddTransient<IAuthenticateService, AuthenticateService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ISetUpService, SetUpService>();
 
 builder.Services.AddControllers();
 

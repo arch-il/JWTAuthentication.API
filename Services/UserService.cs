@@ -3,6 +3,7 @@ using JWTAuthentication.API.Models.UserModels;
 using JWTAuthentication.API.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Net;
+using Microsoft.EntityFrameworkCore;
 
 namespace JWTAuthentication.API.Services
 {
@@ -14,6 +15,35 @@ namespace JWTAuthentication.API.Services
         {
             _userManager = userManager;
         }
+
+        public async Task<CustomResponseModel<IEnumerable<ViewUserModel>>> GetAllUsers()
+        {
+            var users = await _userManager.Users.ToListAsync();
+
+            if (users == null)
+                return new CustomResponseModel<IEnumerable<ViewUserModel>>()
+                {
+                    StatusCode = HttpStatusCode.NotFound,
+                    Message = "no users found"
+                };
+
+            var viewUserModels = new List<ViewUserModel>();
+            foreach (var user in users)
+            {
+                viewUserModels.Add(new ViewUserModel()
+                {
+                    Email = user.Email,
+                    UserName = user.UserName
+                });
+            }
+            
+            return new CustomResponseModel<IEnumerable<ViewUserModel>>()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Result = viewUserModels
+            };
+        }
+
 
         public async Task<CustomResponseModel<ViewUserModel>> GetUserById(int id)
         {
