@@ -1,9 +1,14 @@
 ﻿using JWTAuthentication.API.Interfaces;
+using JWTAuthentication.API.Models;
+using JWTAuthentication.API.Models.SetUpModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JWTAuthentication.API.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class SetUpController : ControllerBase
@@ -16,15 +21,19 @@ namespace JWTAuthentication.API.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<ICustomResponseModel<List<IdentityRole>>> GetAllRoles() => await _service.GetAllRoles();
+        public async Task<ICustomResponseModel<List<CustomRoleAndIdModel>>> GetAllRoles() => await _service.GetAllRoles();
 
         [HttpPost("[action]")]
-        public async Task<ICustomResponseModel<bool>> CreateRole(string roleName) => await _service.CreateRole(roleName);
+        public async Task<ICustomResponseModel<bool>> CreateRole([FromBody] CreateRoleModel model) => await _service.CreateRole(model);
 
         [HttpPost("[action]")]
-        public async Task<ICustomResponseModel<bool>> AddUserToRole(string email, string roleName) => await _service.AddUserToRole(email, roleName);
+        public async Task<ICustomResponseModel<bool>> AddUserToRole([FromBody] RoleModifyToUserModel model) => await _service.AddUserToRole(model);
+
+        [HttpPost("[action]")]
+        public async Task<ICustomResponseModel<bool>> RemoveUserFromRole([FromBody] RoleModifyToUserModel model) => await _service.RemoveUserFromRole(model);
+
 
         [HttpGet("[action]")]
-        public async Task<ICustomResponseModel<IList<string>>> GetUserRoles(string email) => await _service.GetUserRoles(email);
+        public async Task<ICustomResponseModel<List<CustomRoleModel>>> GetUserRoles(GetUserRolesModel model) => await _service.GetUserRoles(model);
     }
 }
